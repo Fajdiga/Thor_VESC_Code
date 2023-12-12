@@ -20,7 +20,7 @@
 #ifndef HW_Thor300_20s_H_
 #define HW_Thor300_20s_H_
 
-#define HW_NAME					"Thor300_20s"
+#define HW_NAME					"Thor300"
 
 // HW properties
 #define HW_HAS_3_SHUNTS
@@ -228,7 +228,7 @@
 #define MCCONF_FOC_F_ZV				    30000.0
 #endif
 #ifndef MCCONF_L_MAX_ABS_CURRENT
-#define MCCONF_L_MAX_ABS_CURRENT		305.0	// The maximum absolute current above which a fault is generated
+#define MCCONF_L_MAX_ABS_CURRENT		300.0	// The maximum absolute current above which a fault is generated
 #endif
 #ifndef MCCONF_FOC_SAMPLE_V0_V7
 #define MCCONF_FOC_SAMPLE_V0_V7			false	// Run control loop in both v0 and v7 (requires phase shunts)
@@ -244,11 +244,11 @@
 #define HW_LIM_CURRENT			-250.0, 250.0
 #define HW_LIM_CURRENT_IN		-150.0, 150.0
 #define HW_LIM_CURRENT_ABS		0.0, 315.0
-#define HW_LIM_VIN			    20.0, 92.0
+#define HW_LIM_VIN			    18.0, 92.0
 #define HW_LIM_ERPM			    -200e3, 200e3
 #define HW_LIM_DUTY_MIN			0.0, 0.1
 #define HW_LIM_DUTY_MAX			0.0, 0.95
-#define HW_LIM_TEMP_FET			-40.0, 85.0
+#define HW_LIM_TEMP_FET			-40.0, 90.0
 
 // Functions
 float hw_Thor_get_temp(void);
