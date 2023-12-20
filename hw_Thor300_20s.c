@@ -244,7 +244,7 @@ void hw_try_restore_i2c(void) {
 bool hw_sample_shutdown_button(void) {
 	
 	chMtxLock(&shutdown_mutex);
-	bt_diff = 0.0;
+	bt_diff = (ADC_VOLTS(ADC_IND_SHUTDOWN));
 	bt_diff = (bt_diff + ADC_VOLTS(ADC_IND_SHUTDOWN))/2;
 	chThdSleep(1);
 	bt_diff = (bt_diff + ADC_VOLTS(ADC_IND_SHUTDOWN))/2;
@@ -252,7 +252,7 @@ bool hw_sample_shutdown_button(void) {
 	bt_diff = (bt_diff + ADC_VOLTS(ADC_IND_SHUTDOWN))/2;
 	chMtxUnlock(&shutdown_mutex);
 
-	if(bt_diff > 2.3){
+	if(bt_diff > 2.25){
 		pressed_time += 12;
 		return true;
 	}else{
