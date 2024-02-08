@@ -23,13 +23,16 @@
 #include "stm32f4xx_conf.h"
 #include "utils_math.h"
 #include <math.h>
+#include "terminal.h"
+#include "commands.h"
 #include "mc_interface.h"
 
 // Variables
 static volatile bool i2c_running = false;
 static mutex_t shutdown_mutex;
 static float bt_diff = 0.0;
-static int pressed_time = 0;
+
+//static int pressed_time = 0;
 
 // I2C configuration
 static const I2CConfig i2cfg = {
@@ -241,42 +244,30 @@ void hw_try_restore_i2c(void) {
 	}
 }
 
+
+
 bool hw_sample_shutdown_button(void) {
-	
+	#ifdef ALWAYS_ON
+	return true;
+    #endif
 	chMtxLock(&shutdown_mutex);
 	
 	bt_diff = 0.0;
 
-	for (int i = 0;i < 3;i++) {
+	for (int i = 0;i < 4;i++) {
 
 		float val1 =ADC_VOLTS(ADC_IND_SHUTDOWN);
-		chThdSleepMilliseconds(1);
+		chThdSleepMilliseconds(2);
 		float val2 = ADC_VOLTS(ADC_IND_SHUTDOWN);
-		chThdSleepMilliseconds(1);
+		chThdSleepMilliseconds(2);
 		bt_diff += (val1 - val2);
 	}
 	chMtxUnlock(&shutdown_mutex);
 
-	return (bt_diff > 0.10);
-	}
-/*
-	if(bt_diff > 2.25){
-		pressed_time += 12;
-		return true;
-	}else{
-		if(pressed_time > 1000){
-			pressed_time = 0;
-			return false;
-		}else{
-			pressed_time = 0;
-			return true;
-		}
-		
+	return ((bt_diff > 0.10));
 	}
 
-	return pressed_time < 1000 ;
-}
-*/
+
 float hw_Thor_get_temp(void) {
 	float t1 = (1.0 / ((logf(NTC_RES(ADC_Value[ADC_IND_TEMP_MOS]) / 10000.0) / 3380.0) + (1.0 / 298.15)) - 273.15);
 	float t3 = (1.0 / ((logf(NTC_RES(ADC_Value[ADC_IND_TEMP_MOS_3]) / 10000.0) / 3380.0) + (1.0 / 298.15)) - 273.15);
@@ -289,6 +280,4 @@ float hw_Thor_get_temp(void) {
 	} 
 	return res;
 }
-
-
 
