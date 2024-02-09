@@ -254,17 +254,16 @@ bool hw_sample_shutdown_button(void) {
 	
 	bt_diff = 0.0;
 
-	for (int i = 0;i < 4;i++) {
+	//for (int i = 0;i < 5;i++) {
 
 		float val1 =ADC_VOLTS(ADC_IND_SHUTDOWN);
-		chThdSleepMilliseconds(2);
+		chThdSleepMilliseconds(5);
 		float val2 = ADC_VOLTS(ADC_IND_SHUTDOWN);
-		chThdSleepMilliseconds(2);
 		bt_diff += (val1 - val2);
-	}
+	//}
 	chMtxUnlock(&shutdown_mutex);
 
-	return ((bt_diff > 0.10));
+	return ((bt_diff > 0.07));
 	}
 
 
