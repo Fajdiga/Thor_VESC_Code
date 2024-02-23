@@ -250,20 +250,20 @@ bool hw_sample_shutdown_button(void) {
 	#ifdef ALWAYS_ON
 	return true;
     #endif
-	chMtxLock(&shutdown_mutex);
-	
+
 	bt_diff = 0.0;
-
-	//for (int i = 0;i < 5;i++) {
-
-		float val1 =ADC_VOLTS(ADC_IND_SHUTDOWN);
-		chThdSleepMilliseconds(5);
-		float val2 = ADC_VOLTS(ADC_IND_SHUTDOWN);
-		bt_diff += (val1 - val2);
-	//}
+	chMtxLock(&shutdown_mutex);
+	float val1 =ADC_VOLTS(ADC_IND_SHUTDOWN);
+	chThdSleepMilliseconds(5);
+	float val2 = ADC_VOLTS(ADC_IND_SHUTDOWN);
 	chMtxUnlock(&shutdown_mutex);
+	bt_diff += (val1 - val2);
 
-	return ((bt_diff > 0.07));
+	if(bt_diff > 0.07){
+		return false;
+		}else{
+		return true;
+		}
 	}
 
 
