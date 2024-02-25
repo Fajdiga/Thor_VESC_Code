@@ -259,11 +259,8 @@ bool hw_sample_shutdown_button(void) {
 	chMtxUnlock(&shutdown_mutex);
 	bt_diff += (val1 - val2);
 
-	if(bt_diff > 0.07){
-		return false;
-		}else{
-		return true;
-		}
+	return ((bt_diff < 0.07));
+
 	}
 
 
