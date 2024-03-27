@@ -213,7 +213,7 @@
 #define READ_HALL3()			palReadPad(HW_HALL_ENC_GPIO3, HW_HALL_ENC_PIN3)
 
 // Override dead time. See the stm32f4 reference manual for calculating this value.
-#define HW_DEAD_TIME_NSEC		450.0
+#define HW_DEAD_TIME_NSEC		300.0
 
 // Default setting overrides
 #ifndef MCCONF_L_MIN_VOLTAGE
@@ -226,10 +226,10 @@
 #define MCCONF_DEFAULT_MOTOR_TYPE		MOTOR_TYPE_FOC
 #endif
 #ifndef MCCONF_FOC_F_ZV
-#define MCCONF_FOC_F_ZV				    30000.0
+#define MCCONF_FOC_F_ZV				    40000.0
 #endif
 #ifndef MCCONF_L_MAX_ABS_CURRENT
-#define MCCONF_L_MAX_ABS_CURRENT		200.0	// The maximum absolute current above which a fault is generated
+#define MCCONF_L_MAX_ABS_CURRENT		250.0	// The maximum absolute current above which a fault is generated
 #endif
 #ifndef MCCONF_FOC_SAMPLE_V0_V7
 #define MCCONF_FOC_SAMPLE_V0_V7			false	// Run control loop in both v0 and v7 (requires phase shunts)
@@ -238,28 +238,18 @@
 #define MCCONF_L_IN_CURRENT_MAX			100.0	// Input current limit in Amperes (Upper)
 #endif
 #ifndef MCCONF_L_IN_CURRENT_MIN
-#define MCCONF_L_IN_CURRENT_MIN			-100.0	// Input current limit in Amperes (Lower)
-#endif
-//#ifndef MCCONF_L_SLOW_ABS_OVERCURRENT 0
-//#define MCCONF_L_SLOW_ABS_OVERCURRENT 0	// Input current limit in Amperes (Lower)
-//#endif
-#ifndef MCCONF_L_TIME_CONSTANT
-#define MCCONF_L_TIME_CONSTANT 500	// Input current limit in Amperes (Lower)
+#define MCCONF_L_IN_CURRENT_MIN			-50.0	// Input current limit in Amperes (Lower)
 #endif
 
 // Setting limits
-#define HW_LIM_CURRENT			-200.0, 200.0
+#define HW_LIM_CURRENT			-250.0, 250.0
 #define HW_LIM_CURRENT_IN		-150.0, 150.0
-#define HW_LIM_CURRENT_ABS		0.0, 250.0
+#define HW_LIM_CURRENT_ABS		0.0, 315.0
 #define HW_LIM_VIN			    18.0, 92.0
 #define HW_LIM_ERPM			    -200e3, 200e3
 #define HW_LIM_DUTY_MIN			0.0, 0.1
 #define HW_LIM_DUTY_MAX			0.0, 0.95
 #define HW_LIM_TEMP_FET			-40.0, 100.0
-// Slow ABS Current Limit
-#define HW_LIMIT_SLOW_ABS_OVERCURRENT 0
-// Define time constant to 500us for fast response
-#define HW_LIMIT_TIME_CONSTANT 500
 
 // Functions
 float hw_Thor_get_temp(void);

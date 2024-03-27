@@ -32,7 +32,6 @@ static volatile bool i2c_running = false;
 static mutex_t shutdown_mutex;
 static float bt_diff = 0.0;
 
-//static int pressed_time = 0;
 
 // I2C configuration
 static const I2CConfig i2cfg = {
@@ -45,6 +44,7 @@ static const I2CConfig i2cfg = {
 void hw_init_gpio(void) {
 
 	chMtxObjectInit(&shutdown_mutex);
+	
 	// GPIO clock enable
 	RCC_AHB1PeriphClockCmd(RCC_AHB1Periph_GPIOA, ENABLE);
 	RCC_AHB1PeriphClockCmd(RCC_AHB1Periph_GPIOB, ENABLE);
