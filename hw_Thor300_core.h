@@ -180,9 +180,6 @@
 #define LSM6DS3_SDA_PIN			2
 #define LSM6DS3_SCL_GPIO		GPIOB
 #define LSM6DS3_SCL_PIN			5
-//#define IMU_FLIP
-//#define IMU_ROT_90
-
 
 // UART Peripheral
 #define HW_UART_DEV		        SD4
