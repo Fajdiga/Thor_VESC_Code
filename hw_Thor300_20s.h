@@ -20,7 +20,7 @@
 #ifndef HW_Thor300_20s_H_
 #define HW_Thor300_20s_H_
 
-#define HW_NAME					"Thor300"
+#define HW_NAME					"Thor300_V.04"
 
 #include "hw_Thor300_core.h"
 

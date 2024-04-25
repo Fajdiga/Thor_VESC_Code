@@ -26,7 +26,6 @@
 #include "terminal.h"
 #include "commands.h"
 #include "mc_interface.h"
-#include "buzzer.h"
 
 // Variables
 static volatile bool i2c_running = false;
@@ -44,6 +43,9 @@ static const I2CConfig i2cfg = {
 		100000,
 		STD_DUTY_CYCLE
 };
+
+#define EXT_BUZZER_ON()   palSetPad(HW_ICU_GPIO, HW_ICU_PIN)
+#define EXT_BUZZER_OFF()  palClearPad(HW_ICU_GPIO, HW_ICU_PIN)
 
 // Private functions
 static void terminal_button_test(int argc, const char **argv);
@@ -65,6 +67,12 @@ void hw_init_gpio(void) {
 	palSetPadMode(LED_RED_GPIO, LED_RED_PIN,
 			PAL_MODE_OUTPUT_PUSHPULL |
 			PAL_STM32_OSPEED_HIGHEST);
+
+	// On-board Buzzer (using servo pin!)
+	palSetPadMode(HW_ICU_GPIO, HW_ICU_PIN,
+			PAL_MODE_OUTPUT_PUSHPULL |
+			PAL_STM32_OSPEED_HIGHEST);
+	EXT_BUZZER_OFF();
 
 	// GPIOA Configuration: Channel 1 to 3 as alternate function push-pull
 	palSetPadMode(GPIOA, 8, PAL_MODE_ALTERNATE(GPIO_AF_TIM1) |
@@ -311,14 +319,14 @@ bool hw_sample_shutdown_button(void) {
         if (!force_poweroff && (fabsf(mc_interface_get_rpm()) > ERPM_THRESHOLD)) {
             will_poweroff = false;
             bt_hold_counter = 0;
-            beep_off();
+            EXT_BUZZER_OFF();
             return true;
         }
 
         // Now we look for a falling edge to shut down
         if ((bt_diff < -RISING_EDGE_THRESHOLD) || (newval < bt_unpressed + RISING_EDGE_THRESHOLD / 2)) {
             bt_hold_counter++;
-            beep_off();
+            EXT_BUZZER_OFF();
             return false;
         }
         return true;
@@ -340,7 +348,6 @@ bool hw_sample_shutdown_button(void) {
         // we've had a rising edge and are now checking for a steady hold
         if (newval > bt_unpressed + RISING_EDGE_THRESHOLD * 1.5) {
             bt_hold_counter++;
-            //LED_RED_ON();
 
             if (bt_hold_counter > TIME_500MS) {
                 if (fabsf(mc_interface_get_rpm()) < ERPM_THRESHOLD) {
@@ -349,14 +356,14 @@ bool hw_sample_shutdown_button(void) {
                     bt_hold_counter = 0;
 
                     // super short beep to let the user know they can let go of the button now
-                    beep_on();
+                    EXT_BUZZER_ON();
                     chThdSleepMilliseconds(20);
-                    beep_off();
+                    EXT_BUZZER_OFF();
                 }
                 else {
                     if (bt_hold_counter  > TIME_3S) {
                         // Emergency Power-Down - beep to let the user know it's ready
-                        beep_on();
+                        EXT_BUZZER_ON();
                         will_poweroff = true;
                         force_poweroff = true;
                         bt_hold_counter = 0;
@@ -368,8 +375,7 @@ bool hw_sample_shutdown_button(void) {
         else {
             // press is too short, abort
             bt_hold_counter = 0;
-            beep_off();
-            //LED_RED_OFF();
+            EXT_BUZZER_OFF();
         }
     }
     return true;
